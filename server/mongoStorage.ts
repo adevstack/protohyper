@@ -13,7 +13,10 @@ export class MongoStorage implements IStorage {
   private currentId: number = 1;
 
   constructor() {
-    const connectionString = "mongodb+srv://protohyperai:P3k9UW0Sz8YfIqwB@protohyper.169tlxs.mongodb.net/";
+    const connectionString = process.env.MONGODB_URL;
+    if (!connectionString) {
+      throw new Error("MONGODB_URL environment variable is required");
+    }
     this.client = new MongoClient(connectionString);
     this.db = this.client.db("property_db");
     this.users = this.db.collection("users");

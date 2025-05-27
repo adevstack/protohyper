@@ -201,7 +201,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -227,7 +227,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -252,7 +252,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All Types</SelectItem>
+                          <SelectItem value="all">All Types</SelectItem>
                           <SelectItem value="House">House</SelectItem>
                           <SelectItem value="Apartment">Apartment</SelectItem>
                           <SelectItem value="Condo">Condo</SelectItem>
@@ -278,7 +278,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="Yes">Yes</SelectItem>
                           <SelectItem value="No">No</SelectItem>
                           <SelectItem value="Partially">Partially</SelectItem>
@@ -302,7 +302,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="Sale">Sale</SelectItem>
                           <SelectItem value="Rent">Rent</SelectItem>
                           <SelectItem value="Lease">Lease</SelectItem>
@@ -326,7 +326,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="true">Verified Only</SelectItem>
                           <SelectItem value="false">Unverified</SelectItem>
                         </SelectContent>

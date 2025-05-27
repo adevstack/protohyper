@@ -214,6 +214,12 @@ export class MemStorage implements IStorage {
       createdAt: now,
       updatedAt: now,
       isVerified: insertProperty.isVerified || false,
+      description: insertProperty.description || null,
+      amenities: insertProperty.amenities || null,
+      tags: insertProperty.tags || null,
+      rating: insertProperty.rating || null,
+      imageUrl: insertProperty.imageUrl || null,
+      availableFrom: insertProperty.availableFrom || null,
     };
     this.properties.set(id, property);
     return property;

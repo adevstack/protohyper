@@ -106,17 +106,17 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     }
   }, [token, queryClient]);
 
+  const contextValue: AuthContextType = {
+    user: user || null,
+    login,
+    register,
+    logout,
+    isLoading: isLoading || loginMutation.isPending || registerMutation.isPending,
+  };
+
   return React.createElement(
     AuthContext.Provider,
-    {
-      value: {
-        user: user || null,
-        login,
-        register,
-        logout,
-        isLoading: isLoading || loginMutation.isPending || registerMutation.isPending,
-      }
-    },
+    { value: contextValue },
     children
   );
 }

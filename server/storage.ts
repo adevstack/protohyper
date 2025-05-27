@@ -338,4 +338,6 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { mongoStorage } from './mongoStorage';
+
+export const storage = mongoStorage;

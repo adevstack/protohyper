@@ -390,7 +390,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">Sort by: Newest</SelectItem>
+                            <SelectItem value="created_desc">Sort by: Newest</SelectItem>
                             <SelectItem value="price_asc">Price: Low to High</SelectItem>
                             <SelectItem value="price_desc">Price: High to Low</SelectItem>
                             <SelectItem value="created_asc">Oldest First</SelectItem>

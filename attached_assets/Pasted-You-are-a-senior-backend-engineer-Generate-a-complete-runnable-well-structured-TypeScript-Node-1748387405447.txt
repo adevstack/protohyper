@@ -1,0 +1,96 @@
+You are a senior backend engineer.
+
+Generate a complete, runnable, well-structured TypeScript + Node.js backend project named `property-listing-backend` that fulfills the following assignment spec.
+
+Tech Stack:
+- Node.js 20, TypeScript, Express 5
+- MongoDB (via Mongoose)
+  → The user has already uploaded a CSV dataset into MongoDB Atlas under:
+     Database: `property_db`
+     Collection: `properties`
+- Redis (ioredis) for caching
+- JWT for auth (7d), bcrypt for password hashing
+- ESModules (`"type": "module"` in package.json)
+- Docker (for local development only)
+- Deployment on **Render** (Docker + environment variables)
+
+Features:
+
+1. User Authentication
+   - POST `/api/v1/auth/register` – Register `{name, email, password}`
+   - POST `/api/v1/auth/login` – Login `{email, password}` → return JWT
+
+2. Property CRUD (JWT required)
+   - POST `/api/v1/properties` – Create property (linked to `req.user`)
+   - GET `/api/v1/properties` – List with filters:
+     - `priceMin`, `priceMax`, `bedrooms`, `bathrooms`, `city`, `state`, `country`, `areaMin`, `areaMax`
+     - `sort` by price/createdAt asc/desc
+     - `page`, `limit` for pagination
+   - GET `/api/v1/properties/:id` – Property detail
+   - PATCH `/api/v1/properties/:id` – Update (only creator)
+   - DELETE `/api/v1/properties/:id` – Delete (only creator)
+
+3. Favorites (JWT)
+   - POST `/api/v1/favorites/:propertyId` – Add to favorites
+   - DELETE `/api/v1/favorites/:propertyId` – Remove
+   - GET `/api/v1/favorites` – List favorites
+
+4. Recommendations (JWT)
+   - POST `/api/v1/recommend` – `{recipientEmail, propertyId}`
+   - GET `/api/v1/recommendations` – Properties recommended to current user
+
+5. Redis Caching
+   - GET `/properties` → cache list: `prop:list:<query_hash>` (TTL: 60s)
+   - GET `/properties/:id` → cache key: `prop:id:<id>` (TTL: 60s)
+   - Invalidate cache on create/update/delete
+   - Favorites set in Redis: `user:favorites:<userId>`
+
+Middleware:
+- `authGuard` – Validates JWT
+- `cache` – Read-through Redis
+- `errorHandler` – Central error handler
+
+Environment:
+- `.env.example` with:
+  - `PORT=3000`
+  - `JWT_SECRET=your_jwt_secret`
+  - `REDIS_URL=redis://localhost:6379`
+  - `MONGODB_URI=` ← left blank for user to paste Atlas URI
+
+Docker:
+- `Dockerfile` to deploy to **Render**
+- `docker-compose.yml` with Redis + Mongo (for local dev only)
+
+Project Structure:
+- `src/config/` – `env.ts`, `mongo.ts`, `redis.ts`
+- `src/models/` – `user.model.ts`, `property.model.ts`
+- `src/controllers/` – `auth.controller.ts`, `property.controller.ts`, etc.
+- `src/services/` – `auth.service.ts`, `property.service.ts`, etc.
+- `src/routes/` – `auth.routes.ts`, `property.routes.ts`, etc.
+- `src/middlewares/` – `auth.ts`, `cache.ts`, `error.ts`
+- `src/utils/` – `apiError.ts`, `logger.ts`, `paginate.ts`
+- `src/types/` – express `Request.user` typing
+- `server.ts`
+
+Tooling:
+- TypeScript (`tsconfig.json`)
+- ESLint (Airbnb + TypeScript) – `.eslintrc.cjs`
+- Prettier – `.prettierrc`
+- `.env.example`, `README.md`, `Dockerfile`, `docker-compose.yml`
+- `Procfile`: `web: node build/server.js` ← for Render
+
+Run Instructions:
+- For local dev:
+  - `docker-compose up -d` to start Redis and Mongo
+  - Add your MongoDB Atlas URI to `.env`
+  - `npm install && npm run dev` (runs on http://localhost:3000)
+- For Render:
+  - Use Docker deploy
+  - Add environment variables: `MONGODB_URI`, `JWT_SECRET`, `REDIS_URL`
+  - App will start from `Procfile`
+
+---
+
+Important:
+- Do not seed the database with mock data.
+- User signup details should be saved in MongoDB.

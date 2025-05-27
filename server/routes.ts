@@ -5,7 +5,10 @@ import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { insertUserSchema, insertPropertySchema, type PropertyFilters } from "@shared/schema";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is required");
+}
 
 interface AuthRequest extends Request {
   user?: { id: number; email: string };

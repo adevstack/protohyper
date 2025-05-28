@@ -1,14 +1,9 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { insertUserSchema, insertPropertySchema, type PropertyFilters } from "@shared/schema";
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is required");
-}
+import { generateToken, verifyToken } from "./services/auth.service";
 
 interface AuthRequest extends Request {
   user?: { id: number; email: string };
@@ -22,7 +17,7 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; email: string };
+    const decoded = verifyToken(token);
     req.user = decoded;
     next();
   } catch (error) {
@@ -43,7 +38,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const user = await storage.createUser(userData);
-      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+      const token = generateToken(user.id, user.email);
       
       res.status(201).json({ 
         user: { id: user.id, name: user.name, email: user.email }, 
@@ -68,7 +63,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+      const token = generateToken(user.id, user.email);
       
       res.json({ 
         user: { id: user.id, name: user.name, email: user.email }, 

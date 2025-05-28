@@ -73,21 +73,21 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
 
   const onSubmit = (data: FiltersFormData) => {
     const filters: PropertyFiltersType = {
-      ...(data.priceMin && { priceMin: Number(data.priceMin) }),
-      ...(data.priceMax && { priceMax: Number(data.priceMax) }),
-      ...(data.areaMin && { areaMin: Number(data.areaMin) }),
-      ...(data.areaMax && { areaMax: Number(data.areaMax) }),
-      ...(data.bedrooms && { bedrooms: Number(data.bedrooms) }),
-      ...(data.bathrooms && { bathrooms: Number(data.bathrooms) }),
-      ...(data.city && { city: data.city }),
-      ...(data.state && { state: data.state }),
-      ...(data.type && { type: data.type }),
-      ...(data.furnished && { furnished: data.furnished }),
-      ...(data.listingType && { listingType: data.listingType }),
-      ...(data.isVerified && { isVerified: data.isVerified === "true" }),
-      ...(data.amenities && { amenities: data.amenities }),
-      ...(data.availableFrom && { availableFromAfter: data.availableFrom }),
-      ...(data.sort && { sort: data.sort as PropertyFiltersType['sort'] }),
+      ...(data.priceMin && data.priceMin.trim() !== '' && { priceMin: Number(data.priceMin) }),
+      ...(data.priceMax && data.priceMax.trim() !== '' && { priceMax: Number(data.priceMax) }),
+      ...(data.areaMin && data.areaMin.trim() !== '' && { areaMin: Number(data.areaMin) }),
+      ...(data.areaMax && data.areaMax.trim() !== '' && { areaMax: Number(data.areaMax) }),
+      ...(data.bedrooms && data.bedrooms.trim() !== '' && { bedrooms: Number(data.bedrooms) }),
+      ...(data.bathrooms && data.bathrooms.trim() !== '' && { bathrooms: Number(data.bathrooms) }),
+      ...(data.city && data.city.trim() !== '' && { city: data.city }),
+      ...(data.state && data.state.trim() !== '' && { state: data.state }),
+      ...(data.type && data.type.trim() !== '' && { type: data.type }),
+      ...(data.furnished && data.furnished.trim() !== '' && { furnished: data.furnished }),
+      ...(data.listingType && data.listingType.trim() !== '' && { listingType: data.listingType }),
+      ...(data.isVerified && data.isVerified.trim() !== '' && { isVerified: data.isVerified === "true" }),
+      ...(data.amenities && data.amenities.trim() !== '' && { amenities: data.amenities }),
+      ...(data.availableFrom && data.availableFrom.trim() !== '' && { availableFromAfter: data.availableFrom }),
+      ...(data.sort && data.sort.trim() !== '' && { sort: data.sort as PropertyFiltersType['sort'] }),
     };
     onFiltersChange(filters);
   };
@@ -201,7 +201,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="any">Any</SelectItem>
+                          <SelectItem value="">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -227,7 +227,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="any">Any</SelectItem>
+                          <SelectItem value="">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -252,7 +252,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="all">All Types</SelectItem>
+                          <SelectItem value="">All Types</SelectItem>
                           <SelectItem value="House">House</SelectItem>
                           <SelectItem value="Apartment">Apartment</SelectItem>
                           <SelectItem value="Condo">Condo</SelectItem>
@@ -278,7 +278,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="any">Any</SelectItem>
+                          <SelectItem value="">Any</SelectItem>
                           <SelectItem value="Yes">Yes</SelectItem>
                           <SelectItem value="No">No</SelectItem>
                           <SelectItem value="Partially">Partially</SelectItem>
@@ -302,7 +302,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
+                          <SelectItem value="">All</SelectItem>
                           <SelectItem value="Sale">Sale</SelectItem>
                           <SelectItem value="Rent">Rent</SelectItem>
                           <SelectItem value="Lease">Lease</SelectItem>
@@ -326,7 +326,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
+                          <SelectItem value="">All</SelectItem>
                           <SelectItem value="true">Verified Only</SelectItem>
                           <SelectItem value="false">Unverified</SelectItem>
                         </SelectContent>

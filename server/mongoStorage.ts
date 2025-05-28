@@ -15,7 +15,7 @@ export class MongoStorage implements IStorage {
   constructor() {
     const connectionString = process.env.MONGODB_URL;
     if (!connectionString) {
-      throw new Error("MONGODB_URL environment variable is required");
+      throw new Error("MONGODB_URI environment variable is required");
     }
     this.client = new MongoClient(connectionString);
     this.db = this.client.db("property_db");
@@ -24,7 +24,6 @@ export class MongoStorage implements IStorage {
     this.favorites = this.db.collection("favorites");
     this.recommendations = this.db.collection("recommendations");
   }
-
   async connect() {
     try {
       await this.client.connect();

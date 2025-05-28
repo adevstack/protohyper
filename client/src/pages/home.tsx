@@ -132,8 +132,10 @@ export default function Home() {
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="House">House</SelectItem>
                     <SelectItem value="Apartment">Apartment</SelectItem>
-                    <SelectItem value="Condo">Condo</SelectItem>
                     <SelectItem value="Villa">Villa</SelectItem>
+                    <SelectItem value="Townhouse">Townhouse</SelectItem>
+                    <SelectItem value="Studio">Studio</SelectItem>
+                    <SelectItem value="Penthouse">Penthouse</SelectItem>
                   </SelectContent>
                 </Select>
                 <div className="relative">
@@ -290,7 +292,10 @@ export default function Home() {
               <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white transition-colors duration-200">Houses for Sale</a></li>
                 <li><a href="#" className="hover:text-white transition-colors duration-200">Apartments</a></li>
-                <li><a href="#" className="hover:text-white transition-colors duration-200">Condos</a></li>
+                <li><a href="#" className="hover:text-white transition-colors duration-200">Studio</a></li>
+                <li><a href="#" className="hover:text-white transition-colors duration-200">Penthouse</a></li>
+                <li><a href="#" className="hover:text-white transition-colors duration-200">Villa</a></li>
+                <li><a href="#" className="hover:text-white transition-colors duration-200">Townhouse</a></li>
                 <li><a href="#" className="hover:text-white transition-colors duration-200">Commercial</a></li>
               </ul>
             </div>

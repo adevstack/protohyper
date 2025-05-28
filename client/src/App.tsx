@@ -9,12 +9,26 @@ import Dashboard from "@/pages/dashboard";
 import Favorites from "@/pages/favorites";
 import Recommendations from "@/pages/recommendations";
 import NotFound from "@/pages/not-found";
+import { useState } from "react";
 
-function Router() {
+interface RouterProps {
+  showCreateForm: boolean;
+  setShowCreateForm: (show: boolean) => void;
+}
+
+function Router({ showCreateForm, setShowCreateForm }: RouterProps) {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route
+        path="/dashboard"
+        component={() => (
+          <Dashboard
+            showCreateForm={showCreateForm}
+            setShowCreateForm={setShowCreateForm}
+          />
+        )}
+      />
       <Route path="/favorites" component={Favorites} />
       <Route path="/recommendations" component={Recommendations} />
       <Route component={NotFound} />
@@ -23,12 +37,16 @@ function Router() {
 }
 
 function App() {
+  const [showCreateForm, setShowCreateForm] = useState(false);
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Router
+            showCreateForm={showCreateForm}
+            setShowCreateForm={setShowCreateForm}
+          />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>

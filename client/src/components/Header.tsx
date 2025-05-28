@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, LogOut, User } from "lucide-react";
 
-export function Header() {
+interface HeaderProps {
+  setShowCreateForm: (show: boolean) => void;
+}
+
+export function Header({ setShowCreateForm }: HeaderProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -67,7 +71,7 @@ export function Header() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <Button variant="ghost" className="hidden md:block">
+                  <Button variant="ghost" className="hidden md:block" onClick={() => setShowCreateForm(true)}>
                     List Property
                   </Button>
                   <DropdownMenu>

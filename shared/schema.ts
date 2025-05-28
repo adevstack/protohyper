@@ -34,6 +34,7 @@ export const properties = pgTable("properties", {
   createdBy: integer("created_by").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  colorTheme: text("color_theme").notNull().default("#6ab45e"),
 });
 
 export const favorites = pgTable("favorites", {

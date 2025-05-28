@@ -57,6 +57,12 @@ export class MongoStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(insertUser.password, 10);
+    // Ensure currentId is a valid number and not NaN
+    if (!this.currentId || isNaN(this.currentId)) {
+      // Fallback: get max id from DB
+      const lastUser = await this.users.findOne({}, { sort: { id: -1 } });
+      this.currentId = (lastUser?.id || 0) + 1;
+    }
     const id = this.currentId++;
     const now = new Date();
     
@@ -95,23 +101,24 @@ export class MongoStorage implements IStorage {
     const query: any = {};
     
     // Apply filters only if they have meaningful values
-    if (filters.priceMin !== undefined && filters.priceMin !== null && filters.priceMin !== '') {
-      query.price = { ...query.price, $gte: Number(filters.priceMin) };
+    // If no filters are provided, query will be empty and all properties will be returned
+    if (typeof filters.priceMin === 'number') {
+      query.price = { ...query.price, $gte: filters.priceMin };
     }
-    if (filters.priceMax !== undefined && filters.priceMax !== null && filters.priceMax !== '') {
-      query.price = { ...query.price, $lte: Number(filters.priceMax) };
+    if (typeof filters.priceMax === 'number') {
+      query.price = { ...query.price, $lte: filters.priceMax };
     }
-    if (filters.areaMin !== undefined && filters.areaMin !== null && filters.areaMin !== '') {
-      query.areaSqFt = { ...query.areaSqFt, $gte: Number(filters.areaMin) };
+    if (typeof filters.areaMin === 'number') {
+      query.areaSqFt = { ...query.areaSqFt, $gte: filters.areaMin };
     }
-    if (filters.areaMax !== undefined && filters.areaMax !== null && filters.areaMax !== '') {
-      query.areaSqFt = { ...query.areaSqFt, $lte: Number(filters.areaMax) };
+    if (typeof filters.areaMax === 'number') {
+      query.areaSqFt = { ...query.areaSqFt, $lte: filters.areaMax };
     }
-    if (filters.bedrooms !== undefined && filters.bedrooms !== null && filters.bedrooms !== '') {
-      query.bedrooms = { $gte: Number(filters.bedrooms) };
+    if (typeof filters.bedrooms === 'number') {
+      query.bedrooms = { $gte: filters.bedrooms };
     }
-    if (filters.bathrooms !== undefined && filters.bathrooms !== null && filters.bathrooms !== '') {
-      query.bathrooms = { $gte: Number(filters.bathrooms) };
+    if (typeof filters.bathrooms === 'number') {
+      query.bathrooms = { $gte: filters.bathrooms };
     }
     if (filters.city && filters.city.trim() !== '' && filters.city !== 'all') {
       query.city = new RegExp(filters.city.trim(), 'i');
@@ -131,8 +138,8 @@ export class MongoStorage implements IStorage {
     if (filters.listingType && filters.listingType.trim() !== '' && filters.listingType !== 'all') {
       query.listingType = filters.listingType;
     }
-    if (filters.isVerified !== undefined && filters.isVerified !== 'all' && filters.isVerified !== '') {
-      query.isVerified = filters.isVerified === true || filters.isVerified === 'true';
+    if (typeof filters.isVerified === 'boolean') {
+      query.isVerified = filters.isVerified;
     }
     if (filters.amenities && filters.amenities.trim() !== '') {
       query.amenities = new RegExp(filters.amenities.trim(), 'i');
@@ -173,23 +180,31 @@ export class MongoStorage implements IStorage {
       }
     }
 
+    // DEBUG: Log the query and number of docs found
+    console.log('MongoDB property query:', JSON.stringify(query));
     const total = await this.properties.countDocuments(query);
     const propertyDocs = await this.properties.find(query).sort(sort).skip(skip).limit(limit).toArray();
+    console.log('MongoDB propertyDocs.length:', propertyDocs.length);
 
     // Get owner information for each property
     const properties: PropertyWithOwner[] = [];
     for (const propertyDoc of propertyDocs) {
       const owner = await this.users.findOne({ id: propertyDoc.createdBy });
-      if (owner) {
-        properties.push({
-          ...this.mapProperty(propertyDoc),
-          owner: {
-            id: owner.id,
-            name: owner.name,
-            email: owner.email,
-          },
-        });
-      }
+      // If owner is missing, use a placeholder owner
+      properties.push({
+        ...this.mapProperty(propertyDoc),
+        owner: owner
+          ? {
+              id: owner.id,
+              name: owner.name,
+              email: owner.email,
+            }
+          : {
+              id: 0,
+              name: 'Unknown',
+              email: 'unknown@example.com',
+            },
+      });
     }
 
     return {
@@ -350,6 +365,7 @@ export class MongoStorage implements IStorage {
       rating: doc.rating,
       imageUrl: doc.imageUrl,
       availableFrom: doc.availableFrom,
+      colorTheme: doc.colorTheme || "#6ab45e",
     };
   }
 

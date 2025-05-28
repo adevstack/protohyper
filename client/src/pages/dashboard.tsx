@@ -45,17 +45,22 @@ const propertyFormSchema = insertPropertySchema.extend({
   bedrooms: z.string().min(1, "Bedrooms is required"),
   bathrooms: z.string().min(1, "Bathrooms is required"),
   rating: z.string().optional(),
+  colorTheme: z.string().default("#6ab45e"),
 });
 
 type PropertyFormData = z.infer<typeof propertyFormSchema>;
 
-export default function Dashboard() {
+type DashboardProps = {
+  showCreateForm: boolean;
+  setShowCreateForm: (show: boolean) => void;
+};
+
+export default function Dashboard({ showCreateForm, setShowCreateForm }: DashboardProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedProperty, setSelectedProperty] = useState<PropertyWithOwner | null>(null);
   const [editingProperty, setEditingProperty] = useState<PropertyWithOwner | null>(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -79,6 +84,7 @@ export default function Dashboard() {
       tags: "",
       availableFrom: undefined,
       imageUrl: "",
+      colorTheme: "#6ab45e",
     },
   });
 
@@ -191,6 +197,7 @@ export default function Dashboard() {
       bathrooms: parseInt(data.bathrooms),
       rating: data.rating ? data.rating : undefined,
       availableFrom: data.availableFrom ? new Date(data.availableFrom) : undefined,
+      colorTheme: data.colorTheme || "#6ab45e",
     };
 
     if (editingProperty) {
@@ -220,8 +227,9 @@ export default function Dashboard() {
       rating: property.rating || "",
       amenities: property.amenities || "",
       tags: property.tags || "",
-      availableFrom: property.availableFrom ? new Date(property.availableFrom).toISOString().split('T')[0] : undefined,
-      imageUrl: property.imageUrl || "",
+      availableFrom: property.availableFrom ? new Date(property.availableFrom) : undefined,
+      imageUrl: property.imageUrl || '',
+      colorTheme: property.colorTheme || "#6ab45e",
     });
   };
 
@@ -234,7 +242,7 @@ export default function Dashboard() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header setShowCreateForm={() => {}} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Card className="text-center py-12">
             <CardContent>
@@ -249,7 +257,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header setShowCreateForm={setShowCreateForm} />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Header */}
@@ -539,6 +547,20 @@ export default function Dashboard() {
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={form.control}
+                      name="colorTheme"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Color Theme</FormLabel>
+                          <FormControl>
+                            <Input type="color" {...field} value={field.value || "#6ab45e"} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <FormField
@@ -548,7 +570,7 @@ export default function Dashboard() {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Property description" {...field} />
+                          <Textarea placeholder="Property description" {...field} value={field.value ?? ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -563,7 +585,7 @@ export default function Dashboard() {
                         <FormItem>
                           <FormLabel>Amenities (pipe-separated)</FormLabel>
                           <FormControl>
-                            <Input placeholder="Pool|Gym|Parking|Garden" {...field} />
+                            <Input placeholder="Pool|Gym|Parking|Garden" {...field} value={field.value ?? ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -577,7 +599,7 @@ export default function Dashboard() {
                         <FormItem>
                           <FormLabel>Tags (pipe-separated)</FormLabel>
                           <FormControl>
-                            <Input placeholder="Modern|Luxury|Spacious" {...field} />
+                            <Input placeholder="Modern|Luxury|Spacious" {...field} value={field.value ?? ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -587,15 +609,23 @@ export default function Dashboard() {
                     <FormField
                       control={form.control}
                       name="availableFrom"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Available From</FormLabel>
-                          <FormControl>
-                            <Input type="date" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        let value = "";
+                        if (field.value instanceof Date && !isNaN(field.value.getTime())) {
+                          value = field.value.toISOString().slice(0, 10);
+                        } else if (typeof field.value === "string") {
+                          value = field.value;
+                        }
+                        return (
+                          <FormItem>
+                            <FormLabel>Available From</FormLabel>
+                            <FormControl>
+                              <Input type="date" {...field} value={value} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
                     />
 
                     <FormField
@@ -605,7 +635,7 @@ export default function Dashboard() {
                         <FormItem>
                           <FormLabel>Image URL</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://example.com/image.jpg" {...field} />
+                            <Input placeholder="https://example.com/image.jpg" {...field} value={field.value ?? ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

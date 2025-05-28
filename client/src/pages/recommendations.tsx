@@ -158,9 +158,10 @@ export default function Recommendations() {
                   <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="House">House</SelectItem>
                   <SelectItem value="Apartment">Apartment</SelectItem>
-                  <SelectItem value="Condo">Condo</SelectItem>
                   <SelectItem value="Villa">Villa</SelectItem>
                   <SelectItem value="Townhouse">Townhouse</SelectItem>
+                  <SelectItem value="Studio">Studio</SelectItem>
+                  <SelectItem value="Penthouse">Penthouse</SelectItem>
                 </SelectContent>
               </Select>
 

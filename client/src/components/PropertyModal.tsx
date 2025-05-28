@@ -111,9 +111,10 @@ export function PropertyModal({ property, isOpen, onClose, isFavorited = false }
     const fallbackImages = {
       'House': 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
       'Apartment': 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
-      'Condo': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
       'Villa': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
       'Townhouse': 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
+      'Studio': 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
+      'Penthouse': 'https://images.unsplash.com/photo-1464983953574-0892a716854b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600',
     };
     
     return fallbackImages[property.type as keyof typeof fallbackImages] || fallbackImages.House;
@@ -121,9 +122,11 @@ export function PropertyModal({ property, isOpen, onClose, isFavorited = false }
 
   const formatPrice = (price: string) => {
     const num = parseFloat(price);
-    return property.listingType === 'Rent' || property.listingType === 'Lease' 
-      ? `$${num.toLocaleString()}/mo`
-      : `$${num.toLocaleString()}`;
+    // 1 USD = 83 INR (as of May 2025, update as needed)
+    const inr = Math.round(num * 83);
+    return property.listingType === 'Rent' || property.listingType === 'Lease'
+      ? `₹${inr.toLocaleString()}/mo`
+      : `₹${inr.toLocaleString()}`;
   };
 
   const getAmenities = () => {

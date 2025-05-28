@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3050";
+
 interface User {
   id: number;
   name: string;
@@ -22,18 +24,31 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   const [token, setToken] = useState<string | null>(localStorage.getItem("authToken"));
   const queryClient = useQueryClient();
 
+  // Debug: Log token and API base URL on mount and on change
+  useEffect(() => {
+    console.log("[Auth] Current token:", token);
+    console.log("[Auth] API_BASE_URL:", API_BASE_URL);
+    if (!API_BASE_URL || API_BASE_URL === "http://localhost:3050") {
+      console.warn("[Auth] VITE_API_BASE_URL is not set or using default. This may cause auth issues in production.");
+    }
+  }, [token]);
+
   const { data: user, isLoading } = useQuery({
     queryKey: ["/api/v1/auth/me"],
     enabled: !!token,
     staleTime: Infinity,
     retry: false,
     queryFn: async () => {
-      const response = await fetch("/api/v1/auth/me", {
+      if (!token) throw new Error("No token");
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) {
+        // Debug: Log error response
+        const text = await response.text();
+        console.error("[Auth] /api/v1/auth/me failed:", response.status, text);
         localStorage.removeItem("authToken");
         setToken(null);
         throw new Error("Failed to fetch user");

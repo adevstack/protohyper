@@ -77,14 +77,14 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
       ...(data.priceMax && data.priceMax.trim() !== '' && { priceMax: Number(data.priceMax) }),
       ...(data.areaMin && data.areaMin.trim() !== '' && { areaMin: Number(data.areaMin) }),
       ...(data.areaMax && data.areaMax.trim() !== '' && { areaMax: Number(data.areaMax) }),
-      ...(data.bedrooms && data.bedrooms.trim() !== '' && { bedrooms: Number(data.bedrooms) }),
-      ...(data.bathrooms && data.bathrooms.trim() !== '' && { bathrooms: Number(data.bathrooms) }),
+      ...(data.bedrooms && data.bedrooms.trim() !== '' && data.bedrooms !== 'any' && { bedrooms: Number(data.bedrooms) }),
+      ...(data.bathrooms && data.bathrooms.trim() !== '' && data.bathrooms !== 'any' && { bathrooms: Number(data.bathrooms) }),
       ...(data.city && data.city.trim() !== '' && { city: data.city }),
       ...(data.state && data.state.trim() !== '' && { state: data.state }),
-      ...(data.type && data.type.trim() !== '' && { type: data.type }),
-      ...(data.furnished && data.furnished.trim() !== '' && { furnished: data.furnished }),
-      ...(data.listingType && data.listingType.trim() !== '' && { listingType: data.listingType }),
-      ...(data.isVerified && data.isVerified.trim() !== '' && { isVerified: data.isVerified === "true" }),
+      ...(data.type && data.type.trim() !== '' && data.type !== 'all' && { type: data.type }),
+      ...(data.furnished && data.furnished.trim() !== '' && data.furnished !== 'any' && { furnished: data.furnished }),
+      ...(data.listingType && data.listingType.trim() !== '' && data.listingType !== 'all' && { listingType: data.listingType }),
+      ...(data.isVerified && data.isVerified.trim() !== '' && data.isVerified !== 'all' && { isVerified: data.isVerified === "true" }),
       ...(data.amenities && data.amenities.trim() !== '' && { amenities: data.amenities }),
       ...(data.availableFrom && data.availableFrom.trim() !== '' && { availableFromAfter: data.availableFrom }),
       ...(data.sort && data.sort.trim() !== '' && { sort: data.sort as PropertyFiltersType['sort'] }),
@@ -201,7 +201,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -227,7 +227,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="1">1+</SelectItem>
                           <SelectItem value="2">2+</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
@@ -252,7 +252,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All Types</SelectItem>
+                          <SelectItem value="all">All Types</SelectItem>
                           <SelectItem value="House">House</SelectItem>
                           <SelectItem value="Apartment">Apartment</SelectItem>
                           <SelectItem value="Condo">Condo</SelectItem>
@@ -278,7 +278,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Any</SelectItem>
+                          <SelectItem value="any">Any</SelectItem>
                           <SelectItem value="Yes">Yes</SelectItem>
                           <SelectItem value="No">No</SelectItem>
                           <SelectItem value="Partially">Partially</SelectItem>
@@ -302,7 +302,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="Sale">Sale</SelectItem>
                           <SelectItem value="Rent">Rent</SelectItem>
                           <SelectItem value="Lease">Lease</SelectItem>
@@ -326,7 +326,7 @@ export function PropertyFilters({ onFiltersChange, initialFilters = {} }: Proper
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="true">Verified Only</SelectItem>
                           <SelectItem value="false">Unverified</SelectItem>
                         </SelectContent>

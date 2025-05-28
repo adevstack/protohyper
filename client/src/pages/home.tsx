@@ -77,7 +77,7 @@ export default function Home() {
       newFilters.state = quickSearch.location.trim();
     }
     
-    if (quickSearch.type && quickSearch.type.trim() !== '' && quickSearch.type !== '' && quickSearch.type !== 'all') {
+    if (quickSearch.type && quickSearch.type.trim() !== '' && quickSearch.type !== 'all') {
       newFilters.type = quickSearch.type;
     }
     
@@ -129,7 +129,7 @@ export default function Home() {
                     <SelectValue placeholder="Property Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="House">House</SelectItem>
                     <SelectItem value="Apartment">Apartment</SelectItem>
                     <SelectItem value="Condo">Condo</SelectItem>

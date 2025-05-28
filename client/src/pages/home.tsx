@@ -38,7 +38,7 @@ export default function Home() {
     queryFn: async () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== '' && value !== 'all' && value !== 'any') {
           params.append(key, value.toString());
         }
       });
@@ -71,20 +71,20 @@ export default function Home() {
   const handleQuickSearch = () => {
     const newFilters: PropertyFiltersType = {};
     
-    if (quickSearch.location) {
+    if (quickSearch.location && quickSearch.location.trim() !== '') {
       // Search in both city and state
-      newFilters.city = quickSearch.location;
-      newFilters.state = quickSearch.location;
+      newFilters.city = quickSearch.location.trim();
+      newFilters.state = quickSearch.location.trim();
     }
     
-    if (quickSearch.type && quickSearch.type.trim() !== '' && quickSearch.type !== 'all') {
+    if (quickSearch.type && quickSearch.type.trim() !== '' && quickSearch.type !== '' && quickSearch.type !== 'all') {
       newFilters.type = quickSearch.type;
     }
     
-    if (quickSearch.priceRange) {
+    if (quickSearch.priceRange && quickSearch.priceRange.trim() !== '') {
       const [min, max] = quickSearch.priceRange.split('-').map(Number);
-      if (min) newFilters.priceMin = min;
-      if (max) newFilters.priceMax = max;
+      if (min && !isNaN(min)) newFilters.priceMin = min;
+      if (max && !isNaN(max)) newFilters.priceMax = max;
     }
     
     setFilters(newFilters);
@@ -129,7 +129,7 @@ export default function Home() {
                     <SelectValue placeholder="Property Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="">All Types</SelectItem>
                     <SelectItem value="House">House</SelectItem>
                     <SelectItem value="Apartment">Apartment</SelectItem>
                     <SelectItem value="Condo">Condo</SelectItem>

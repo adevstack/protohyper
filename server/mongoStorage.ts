@@ -98,22 +98,52 @@ export class MongoStorage implements IStorage {
   async getProperties(filters: PropertyFilters): Promise<{ properties: PropertyWithOwner[]; total: number; page: number; totalPages: number }> {
     const query: any = {};
     
-    // Apply filters
-    if (filters.priceMin !== undefined) query.price = { ...query.price, $gte: filters.priceMin };
-    if (filters.priceMax !== undefined) query.price = { ...query.price, $lte: filters.priceMax };
-    if (filters.areaMin !== undefined) query.areaSqFt = { ...query.areaSqFt, $gte: filters.areaMin };
-    if (filters.areaMax !== undefined) query.areaSqFt = { ...query.areaSqFt, $lte: filters.areaMax };
-    if (filters.bedrooms !== undefined) query.bedrooms = { $gte: filters.bedrooms };
-    if (filters.bathrooms !== undefined) query.bathrooms = { $gte: filters.bathrooms };
-    if (filters.city && filters.city !== 'all') query.city = new RegExp(filters.city, 'i');
-    if (filters.state && filters.state !== 'all') query.state = new RegExp(filters.state, 'i');
-    if (filters.country && filters.country !== 'all') query.country = new RegExp(filters.country, 'i');
-    if (filters.type && filters.type !== 'all') query.type = filters.type;
-    if (filters.furnished && filters.furnished !== 'any') query.furnished = filters.furnished;
-    if (filters.listingType && filters.listingType !== 'all') query.listingType = filters.listingType;
-    if (filters.isVerified !== undefined && filters.isVerified !== 'all') query.isVerified = filters.isVerified === true || filters.isVerified === 'true';
-    if (filters.amenities) query.amenities = new RegExp(filters.amenities, 'i');
-    if (filters.tags) query.tags = new RegExp(filters.tags, 'i');
+    // Apply filters only if they have meaningful values
+    if (filters.priceMin !== undefined && filters.priceMin !== null && filters.priceMin !== '') {
+      query.price = { ...query.price, $gte: Number(filters.priceMin) };
+    }
+    if (filters.priceMax !== undefined && filters.priceMax !== null && filters.priceMax !== '') {
+      query.price = { ...query.price, $lte: Number(filters.priceMax) };
+    }
+    if (filters.areaMin !== undefined && filters.areaMin !== null && filters.areaMin !== '') {
+      query.areaSqFt = { ...query.areaSqFt, $gte: Number(filters.areaMin) };
+    }
+    if (filters.areaMax !== undefined && filters.areaMax !== null && filters.areaMax !== '') {
+      query.areaSqFt = { ...query.areaSqFt, $lte: Number(filters.areaMax) };
+    }
+    if (filters.bedrooms !== undefined && filters.bedrooms !== null && filters.bedrooms !== '') {
+      query.bedrooms = { $gte: Number(filters.bedrooms) };
+    }
+    if (filters.bathrooms !== undefined && filters.bathrooms !== null && filters.bathrooms !== '') {
+      query.bathrooms = { $gte: Number(filters.bathrooms) };
+    }
+    if (filters.city && filters.city.trim() !== '' && filters.city !== 'all') {
+      query.city = new RegExp(filters.city.trim(), 'i');
+    }
+    if (filters.state && filters.state.trim() !== '' && filters.state !== 'all') {
+      query.state = new RegExp(filters.state.trim(), 'i');
+    }
+    if (filters.country && filters.country.trim() !== '' && filters.country !== 'all') {
+      query.country = new RegExp(filters.country.trim(), 'i');
+    }
+    if (filters.type && filters.type.trim() !== '' && filters.type !== 'all') {
+      query.type = filters.type;
+    }
+    if (filters.furnished && filters.furnished.trim() !== '' && filters.furnished !== 'any') {
+      query.furnished = filters.furnished;
+    }
+    if (filters.listingType && filters.listingType.trim() !== '' && filters.listingType !== 'all') {
+      query.listingType = filters.listingType;
+    }
+    if (filters.isVerified !== undefined && filters.isVerified !== 'all' && filters.isVerified !== '') {
+      query.isVerified = filters.isVerified === true || filters.isVerified === 'true';
+    }
+    if (filters.amenities && filters.amenities.trim() !== '') {
+      query.amenities = new RegExp(filters.amenities.trim(), 'i');
+    }
+    if (filters.tags && filters.tags.trim() !== '') {
+      query.tags = new RegExp(filters.tags.trim(), 'i');
+    }
 
     // Date filtering
     if (filters.availableFromBefore) {

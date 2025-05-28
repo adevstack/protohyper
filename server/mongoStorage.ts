@@ -2,6 +2,7 @@ import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import { type User, type InsertUser, type Property, type InsertProperty, type PropertyWithOwner, type Favorite, type InsertFavorite, type Recommendation, type InsertRecommendation, type PropertyFilters } from "@shared/schema";
 import { IStorage } from './storage';
+import { MONGODB_URI } from './config/env';
 
 export class MongoStorage implements IStorage {
   private client: MongoClient;
@@ -13,11 +14,7 @@ export class MongoStorage implements IStorage {
   private currentId: number = 1;
 
   constructor() {
-    const connectionString = process.env.MONGODB_URL;
-    if (!connectionString) {
-      throw new Error("MONGODB_URI environment variable is required");
-    }
-    this.client = new MongoClient(connectionString);
+    this.client = new MongoClient(MONGODB_URI);
     this.db = this.client.db("property_db");
     this.users = this.db.collection("users");
     this.properties = this.db.collection("properties");

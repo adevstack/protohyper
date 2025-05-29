@@ -11,9 +11,9 @@ COPY . .
 RUN npm run build
 
 # Build client
-WORKDIR /app/client
-RUN npm install
-RUN npm run build
+# WORKDIR /app/client
+# RUN npm install
+# RUN npm run build
 
 # --- Production image ---
 FROM node:20-alpine
@@ -25,7 +25,7 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 
 # Copy client build to server's public directory (adjust if your server expects a different path)
-COPY --from=builder /app/client/dist ./server/public
+# COPY --from=builder /app/client/dist ./server/public
 
 # Expose port (change if your server uses a different port)
 EXPOSE 8080
